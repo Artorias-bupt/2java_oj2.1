@@ -1,0 +1,116 @@
+import java.util.Scanner;
+
+class Student {
+    private String studentNumber;
+    private String studentName;
+    private int markForMaths;
+    private int markForEnglish;
+    private int markForScience;
+    private double Ave;
+    //构造方法
+    public Student() {
+    }
+
+    public Student(String number, String name)throws StudentNumberException {
+        if (number.length() != 10) {
+            throw new StudentNumberException();
+        }
+
+        if(number.charAt(0)=='2'&&number.charAt(1)=='0'){
+            for (int i = 2; i < 10; i++) {
+                if(number.charAt(i)>'9'||number.charAt(i)<'0'){
+                    throw new StudentNumberException();
+                }
+            }
+            studentName = name;
+            studentNumber = number;
+
+        }else {
+            throw new StudentNumberException();
+        }
+
+    }
+
+    //get,set函数
+    public String getNumber() {
+        return studentNumber;
+    }
+    public String getName() {
+        return studentName;
+    }
+    //输入分数
+    public void entermark(int markForMaths,int markForEnglish,int markForScience) throws ScoreException {
+        if ((markForMaths >= 0 && markForMaths <= 100) && (markForEnglish >= 0 && markForEnglish <= 100) && (markForScience >= 0 && markForScience <= 100)) {
+            this.markForMaths=markForMaths;
+            this.markForEnglish=markForEnglish;
+            this.markForScience=markForScience;
+        }else {
+            throw new ScoreException();
+        }
+        calculateAverage();
+
+    }
+    //
+    public int getMathsMark() {
+        return markForMaths;
+    }
+    public int getEnglishMark() {
+        return markForEnglish;
+    }
+    public int getScienceMark() {
+        return markForScience;
+    }
+    //计算平均值
+    public double calculateAverage() {
+        Ave=(markForMaths+markForEnglish+markForScience)/3.0;
+        return Ave;
+    }
+    //定义toString()方法
+    public String toString() {
+        return("Student Info:\n"
+                +"Number:"+studentNumber+"\n"
+                +"Name:"+studentName+"\n"
+                +"Math:"+markForMaths+"\n"
+                +"English:"+markForEnglish+"\n"
+                +"Science:"+markForScience+"\n"
+                +"Ave:"+new java.text.DecimalFormat("0.00").format(Ave));
+    }
+}
+
+class ScoreException extends Exception{
+    public ScoreException() {
+
+    }
+}
+
+class StudentNumberException extends Exception {
+    public StudentNumberException() {
+
+    }
+}
+
+public class StudentTest
+{
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextLine()){
+            String str = sc.nextLine();
+            String[] substr = str.split(" ");
+            //2011211301 WangXiao 85 75 95
+            Student student;
+            try {
+                student = new Student(substr[0], substr[1]);
+                student.entermark(Integer.parseInt(substr[2]), Integer.parseInt(substr[3]), Integer.parseInt(substr[4]));
+                System.out.println(student.toString());
+
+            } catch (StudentNumberException e) {
+                System.out.println("Illegal number format");
+
+            }catch (ScoreException e) {
+                System.out.println("Illegal score format");
+            }
+
+        }
+    }
+
+}
